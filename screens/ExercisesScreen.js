@@ -40,17 +40,21 @@ export default function ExercisesScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Exercises</Text>
-
-      <ScrollView style={styles.exerciseList}>
+      <Text style={styles.title}>My Exercises</Text>      <ScrollView style={styles.exerciseList}>
         {exercises.map((exercise) => (
-          <TouchableOpacity key={exercise.id} style={styles.exerciseCard}>
-            {/* Will replace with real data */}
+          <TouchableOpacity 
+            key={exercise.id} 
+            style={styles.exerciseCard}
+            onPress={() => navigation.navigate('ExerciseDetail', { 
+              exerciseName: exercise.name,
+              exerciseId: exercise.id 
+            })}
+          >
             <Text style={styles.exerciseName}>{exercise.name}</Text>
-            <Text style={styles.exerciseDate}>{exercise.date}</Text>
-            <Text style={styles.workoutExercises}>
-              {exercise.sets} sets x {exercise.reps} reps @ {exercise.weight}{" "}
-              {unitOfMeasurement}
+            <Text style={styles.exerciseDate}>Last: {exercise.date}</Text>
+            <Text style={styles.exerciseStats}>
+              {exercise.weight > 0 ? `${exercise.weight}${unitOfMeasurement} • ` : ''}
+              {exercise.sets} sets • {exercise.reps} reps
             </Text>
           </TouchableOpacity>
         ))}
@@ -106,8 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 5,
-  },
-  workoutExercises: {
+  },  exerciseStats: {
     fontSize: 14,
     color: "#007AFF",
     marginTop: 5,

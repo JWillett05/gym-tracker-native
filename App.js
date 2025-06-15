@@ -8,6 +8,7 @@ import WorkoutsScreen from "./screens/WorkoutsScreen";
 import ProgressScreen from "./screens/ProgressScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ExercisesScreen from "./screens/ExercisesScreen";
+import ExerciseDetailScreen from "./screens/ExerciseDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -50,6 +51,13 @@ export default function App() {
           name="Profile"
           component={ProfileScreen}
           options={{ title: "Profile" }}
+        />
+        <Stack.Screen
+          name="ExerciseDetail"
+          component={ExerciseDetailScreen}
+          options={({ route }) => ({ 
+            title: route.params?.exerciseName || 'Exercise Details' 
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
