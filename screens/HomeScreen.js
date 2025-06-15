@@ -20,6 +20,13 @@ export default function HomeScreen({ navigation }) {
       >
         <Text style={styles.buttonText}>Progress</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={() => navigation.navigate('Exercises')}
+      >
+        <Text style={styles.buttonText}>Exercises</Text>
+      </TouchableOpacity>
       
       <TouchableOpacity 
         style={styles.button}
