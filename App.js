@@ -9,6 +9,7 @@ import ProgressScreen from "./screens/ProgressScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ExercisesScreen from "./screens/ExercisesScreen";
 import ExerciseDetailScreen from "./screens/ExerciseDetailScreen";
+import BodyMetricsScreen from "./screens/BodyMetricsScreen";
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,11 @@ export default function App() {
           options={{ title: "Exercises" }}
         />
         <Stack.Screen
+          name="BodyMetrics"
+          component={BodyMetricsScreen}
+          options={{ title: "Body Metrics" }}
+        />
+        <Stack.Screen
           name="Profile"
           component={ProfileScreen}
           options={{ title: "Profile" }}
@@ -55,8 +61,8 @@ export default function App() {
         <Stack.Screen
           name="ExerciseDetail"
           component={ExerciseDetailScreen}
-          options={({ route }) => ({ 
-            title: route.params?.exerciseName || 'Exercise Details' 
+          options={({ route }) => ({
+            title: route.params?.exerciseName || "Exercise Details",
           })}
         />
       </Stack.Navigator>
