@@ -7,7 +7,28 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default function BodyMetricsScreen({ navigation }) {
+import { auth } from "../firebaseConfig";
+import { addBodyMetrics } from "../firebase-functions/BodyMetrics";
+
+export default function BodyMetricsScreen({}) {
+  const handleAddMetric = async () => {
+    const userId = auth.currentUser.uid;
+    if (!userId) {
+      console.error("User not Authenticated");
+      return;
+    }
+    const newMetric = {
+      date: "2025-06-15",
+      name: "Thigh",
+      description: "Thigh at midpoint",
+      measurement: 24,
+      unit: "inches",
+    };
+    await addBodyMetrics(userId, newMetric);
+    console.log("New metric added:", newMetric);
+    console.log("User ID:", userId);
+  };
+
   // Sample data for body metrics
   const bodyMetrics = [
     {
@@ -39,17 +60,18 @@ export default function BodyMetricsScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>My Body Metrics</Text>
-      <ScrollView style={styles.bodyMetricsList}>
-        {bodyMetrics.map((metric) => (
-          <View key={metric.id} style={styles.metricItem}>
-            <Text style={styles.metricName}>{metric.name}</Text>
-            <Text style={styles.metricDescription}>{metric.description}</Text>
-            <Text style={styles.metricValue}>
-              {metric.measurement} {metric.unit}
-            </Text>
-          </View>
-        ))}
-      </ScrollView>
+      <TouchableOpacity style={styles.addButton} onPress={handleAddMetric}>
+        <Text style={styles.addButtonText}>+ Add New Metric</Text>
+      </TouchableOpacity>
+      {bodyMetrics.map((metric) => (
+        <View key={metric.id} style={styles.metricItem}>
+          <Text style={styles.metricName}>{metric.name}</Text>
+          <Text style={styles.metricDescription}>{metric.description}</Text>
+          <Text style={styles.metricValue}>
+            {metric.measurement} {metric.unit}
+          </Text>
+        </View>
+      ))}
     </View>
   );
 }

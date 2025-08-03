@@ -10,6 +10,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import ExercisesScreen from "./screens/ExercisesScreen";
 import ExerciseDetailScreen from "./screens/ExerciseDetailScreen";
 import BodyMetricsScreen from "./screens/BodyMetricsScreen";
+import AuthScreen from "./screens/AuthScreen";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,11 @@ export default function App() {
           },
         }}
       >
+        <Stack.Screen
+          name="Auth"
+          component={AuthScreen}
+          options={{ title: "Auth for now" }}
+        />
         <Stack.Screen
           name="Home"
           component={HomeScreen}

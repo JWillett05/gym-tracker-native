@@ -7,6 +7,13 @@ export default function HomeScreen({ navigation }) {
       <Text style={styles.title}>Gym Tracker</Text>
       <Text style={styles.subtitle}>Track your fitness journey</Text>
 
+            <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Auth")}
+      >
+        <Text style={styles.buttonText}>Auth for now</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("Workouts")}
