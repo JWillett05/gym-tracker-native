@@ -1,82 +1,133 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity,
+  Modal,
+  TextInput,
+  Button,
 } from "react-native";
 
 import { auth } from "../firebaseConfig";
 import { addBodyMetrics } from "../firebase-functions/BodyMetrics";
 
 export default function BodyMetricsScreen({}) {
+  const [modalVisible, setModalVisible] = useState(false);
+    const [metrics, setMetrics] = useState({
+    name: "",
+    description: "",
+    measurement: "",
+    unit: "",
+  });
+
   const handleAddMetric = async () => {
     const userId = auth.currentUser.uid;
     if (!userId) {
       console.error("User not Authenticated");
       return;
     }
-    const newMetric = {
-      date: "2025-06-15",
-      name: "Thigh",
-      description: "Thigh at midpoint",
-      measurement: 24,
-      unit: "inches",
+    const addedMetric = {
+      name: metrics.name,
+      description: metrics.description,
+      measurement: metrics.measurement,
+      unit: metrics.unit,
     };
-    await addBodyMetrics(userId, newMetric);
-    console.log("New metric added:", newMetric);
+    try {
+      const result = await addBodyMetrics(userId, addedMetric);
+      console.log("Metric added successfully:", result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
     console.log("User ID:", userId);
   };
-
-  // Sample data for body metrics
-  const bodyMetrics = [
-    {
-      id: 1,
-      date: "2025-06-14",
-      name: "Bicep",
-      description: "Bicep over freckle",
-      measurement: 13,
-      unit: "inches",
-    },
-    {
-      id: 2,
-      date: "2025-06-14",
-      name: "Chest",
-      description: "Chest over nipple",
-      measurement: 40,
-      unit: "inches",
-    },
-    {
-      id: 3,
-      date: "2025-06-12",
-      name: "Waist",
-      description: "Waist at navel",
-      measurement: 32,
-      unit: "inches",
-    },
-  ];
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>My Body Metrics</Text>
-      <TouchableOpacity style={styles.addButton} onPress={handleAddMetric}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setModalVisible(true)}
+      >
         <Text style={styles.addButtonText}>+ Add New Metric</Text>
       </TouchableOpacity>
-      {bodyMetrics.map((metric) => (
-        <View key={metric.id} style={styles.metricItem}>
-          <Text style={styles.metricName}>{metric.name}</Text>
-          <Text style={styles.metricDescription}>{metric.description}</Text>
-          <Text style={styles.metricValue}>
-            {metric.measurement} {metric.unit}
-          </Text>
+
+      {/* Modal for Adding Metrics */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modal}>
+          <Text style={styles.modalTitle}>Add New Metric</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Metric Name"
+            value={metrics.name}
+            onChangeText={(text) => setMetrics({ ...metrics, name: text })}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Description"
+            value={metrics.description}
+            onChangeText={(text) => setMetrics({ ...metrics, description: text })}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Measurement"
+            keyboardType="numeric"
+            value={metrics.measurement}
+            onChangeText={(text) => setMetrics({ ...metrics, measurement: text })}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Unit (e.g., inches, cm)"
+            value={metrics.unit}
+            onChangeText={(text) => setMetrics({ ...metrics, unit: text })}
+          />
+          <View style={styles.modalButtons}>
+            <Button title="Add" onPress={handleAddMetric} />
+            <Button
+              title="Cancel"
+              color="red"
+              onPress={() => setModalVisible(false)}
+            />
+          </View>
         </View>
-      ))}
+      </Modal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#fff",
+  },
+  input: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 10,
+    width: "80%",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "80%",
+    marginTop: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
@@ -99,41 +150,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
-  },
-  bodyMetricsList: {
-    flex: 1,
-  },
-  metricItem: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  metricName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  metricDescription: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 5,
-  },
-  metricValue: {
-    fontSize: 16,
-    color: "#007AFF",
-  },
-  metricUnit: {
-    fontSize: 14,
-    color: "#666",
-  },
-  metricDate: {
-    fontSize: 12,
-    color: "#999",
   },
 });
