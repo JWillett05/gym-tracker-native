@@ -8,13 +8,15 @@ export async function addBodyMetrics(userId, metric) {
       {
         name: metric.name || "The exercise name goes here.",
         description: metric.description || "Description goes here.",
+        measurement: metric.measurement || 0,
         unit: metric.unit || "kg",
+        userId: userId || "", 
         createdAt: new Date(),
       }
     );
     console.log("Document written with ID: ", docRef.id);
     return docRef.id;
-  } catch (e) {
-    console.error("Error adding document: ", e);
+  } catch (error) {
+    console.error("Error adding document: ", error);
   }
 }
